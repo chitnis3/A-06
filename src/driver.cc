@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "atm.hpp"
+#include "../includes/atm.hpp"
 
 int main() {
   Atm atm;
