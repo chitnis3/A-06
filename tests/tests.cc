@@ -79,10 +79,8 @@ TEST_CASE("RegisterAccount - Prevent Overwrites", "[adversarial]") {
   Atm atm;
   atm.RegisterAccount(1234, 1111, "Original User", 100.0);
   
-  // Per instructions: throw std::invalid_argument if account already exists
   REQUIRE_THROWS_AS(atm.RegisterAccount(1234, 1111, "Hacker", 5000.0), std::invalid_argument);
   
-  // Verify the balance wasn't secretly updated
   REQUIRE(atm.CheckBalance(1234, 1111) == 100.0);
 }
 
@@ -90,7 +88,6 @@ TEST_CASE("WithdrawCash - Overdraft Protection", "[adversarial]") {
   Atm atm;
   atm.RegisterAccount(1234, 1111, "Sam", 100.0);
   
-  // Per instructions: throw std::runtime_error if balance would go negative
   REQUIRE_THROWS_AS(atm.WithdrawCash(1234, 1111, 150.0), std::runtime_error);
 }
 
@@ -98,7 +95,6 @@ TEST_CASE("DepositCash - Negative Amount", "[adversarial]") {
   Atm atm;
   atm.RegisterAccount(1234, 1111, "Sam", 100.0);
   
-  // Per instructions: throw std::invalid_argument for negative amounts
   REQUIRE_THROWS_AS(atm.DepositCash(1234, 1111, -50.0), std::invalid_argument);
 }
 
@@ -107,7 +103,6 @@ TEST_CASE("Ensure Records Exist", "[adversarial]") {
   atm.RegisterAccount(1234, 1111, "Sam", 100.0);
   atm.DepositCash(1234, 1111, 50.0);
   
-  // Verify that a transaction was actually added to the vector
   auto& logs = atm.GetTransactions()[{1234, 1111}];
   REQUIRE(logs.size() == 1);
 }
